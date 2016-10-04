@@ -1,0 +1,24 @@
+---
+ID: 269
+post_title: 'What does &quot;Radical Agility&quot; means to me?'
+author: kandelvijaya
+post_date: 2016-04-06 06:39:12
+post_excerpt: ""
+layout: post
+permalink: >
+  http://kandelvijaya.com/index.php/2016/04/06/what-does-radical-agility-means-to-me/
+published: true
+---
+<p style="text-align: justify;">I started working in Zalando from the outset of this bright 2016. There has never been a day where i didnt hear the term "Radical Agility". In fact, we celebrated 1st <span class="s1">anniversary y</span><span style="line-height: 1.7;">esterday with chips and beers. What does Radical Agility means exactly? Everything i express here is how i take the concept and internalize, in doing so, i assume 80% of what i express would be same as what other Zalando people might. Lets go.</span></p>
+<p style="text-align: justify;"><img class="alignnone size-full wp-image-325" src="http://139.59.142.118/wp-content/uploads/2016/03/docker-meetup-san-francisco-radical-agility-with-docker-aws-10-638.jpg" alt="docker-meetup-san-francisco-radical-agility-with-docker-aws-10-638" width="638" height="359" /></p>
+<p style="text-align: justify;">Being Fancy!, thats Radical Agility, at least from the outside. Some might say its yet another word mashup. Or yet, a new name to the same principles just to show off.  Yes it is a new name or jargon but it has some real meaning behind being the hype or buzz word. "Radical Agility" is actually Fancy. Fancy in the name and in how it is used in Zalando. Lets dig some more.</p>
+<p style="text-align: justify;">I like to work where i can decide when i am most energetic and motivated to work. Lets assume i work productively from 7 AM to 4 PM. Lets assume your time is 10AM to 7 PM. Thats fine here in Zalando.  Lets assume i love to write backend API (I actually don't write because I'm working on the iOS Engineering part in reality) in Node or better yet i want to really express my API implemented in Haskell. Here i can choose whichever because of 2 things.</p>
+<p style="text-align: justify;">1. We use micro-services so I (or my team) can do whatever it takes to make the API endpoint.</p>
+<p style="text-align: justify;">2. I (or We as team) decide why and how to do things to achieve the "What" company wants to strive for.</p>
+<p style="text-align: justify;">This is really a big thing for me as a developer. I can choose and justify why Haskell is better than Node or vice versa and if i have a valid point, its always a green light. See, thats why we use the term, "We don't fear failing. We love to fail fast.". Theres always another sentence missing in the media and i can complete it as "But we like you not to fail". Its obvious. This choice to me; Autonomy, is one of the 3 pillars of Radical Agility.</p>
+<p style="text-align: justify;"><img class="alignnone size-full wp-image-328" src="http://139.59.142.118/wp-content/uploads/2016/03/docker-meetup-san-francisco-radical-agility-with-docker-aws-12-638.jpg" alt="docker-meetup-san-francisco-radical-agility-with-docker-aws-12-638" width="638" height="359" /></p>
+<p style="text-align: justify;">Mastery, means the company provides a environment where i as a individual can strive to learn new technologies and techniques either by shifting teams or shifting tech stack. Which is a awesome thing. We have a internal job opening if you really want to know  how shifting team is possible. Job inside a job.</p>
+<p style="text-align: justify;">Purpose, you know what it is. You don't like to work 3 months to make a beautiful Button when you don't know why? where is it being used? and how it impacts the user?</p>
+<p style="text-align: justify;">Life balance, for me as a lone ranger in Berlin, might not be that much important. But for people who have families or kids to look after it means a lot. Having the Flexible time is a big bonus. When work is aligned to your need, you get more and you put more.</p>
+<p style="text-align: justify;">Teams are a isolated ; startup, at least thats what i feel; although my team has 13 (now 14 during the edit) iOS Engineering for a product and if you take the Android, API and the management sector it really does not look like a startup. It is because we 14 iOS engineers decide how we want to write the feature, how it should look and why and we justify every thing regarding the feature, release and schedule. We are solely responsible for the project. We decide what to do and we do how we need to do. No disturbance from other teams, higher management or anyone beyond the team until we screw up the entire project. Even if we screw up, we are the ones to fix. I would rather not.  This trust helps individual and teams due diligence while giving certain freedom.</p>
+<p style="text-align: justify;">20% off time and people services, i would love to go over these topics but we shall not hurry. Oh and the music room.</p>
