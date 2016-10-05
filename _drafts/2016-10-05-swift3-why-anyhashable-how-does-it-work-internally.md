@@ -58,3 +58,28 @@ Consider the situation - `[NSObject: AnyObject]`. This turned into `[NSObject: A
 Hence, `Hashable` can only be used to contraint Generic Types but not be used as a Concrete Type. (For more on this `Generic` issue follow this **link**. ) Thus we need a **concrete type conforming to Hashable** that can fit into the Key of dictionary. We also need to enable heteregeneous collection because it needs to bridge to the Objective-C API NSArray and NSDictionary. Hence, we need a type erased container that confroms to `Hashable` to be used inplace of `NSObject`. That contianer is `AnyHashable`.
 
 # internals of AnyHashable
+
+### Step 1: Basic implementation
+Then a naive way to wrap this or box all Hashable conformed type would be:
+
+    struct Any2Hashable : Hashable {
+        private var _box: Any
+        
+        var hashValue: Int {
+            //LOOKOUT 1
+            return (_box as? Hashable)?.hashValue ?? 0
+        }
+        
+        public static func ==(_ lhs: Any2Hashable, _ rhs: Any2Hashable) -> Bool {
+            return lhs.hashValue == rhs.hashValue
+        }
+         
+        init?(_ any: Any) {
+            //LOOKOUT 2
+            if let hany = any as? Hashable {
+                _box = hany
+            }
+            return nil
+        }
+    }
+
