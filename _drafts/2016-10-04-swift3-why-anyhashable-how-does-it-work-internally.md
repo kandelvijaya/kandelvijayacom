@@ -1,6 +1,11 @@
 ---
+ID: 493
 post_title: 'Swift3: Why AnyHashable? How does it work internally?'
+author: kandelvijaya
+post_date: 2016-10-04 20:03:17
+post_excerpt: ""
 layout: post
+permalink: http://kandelvijaya.com/?p=493
 published: false
 ---
 Evolution is predominant. Struggle for Survival applies to just anything that you see. Swift Programming Language is not an exception. Swift continues to change, evolve and mature over time. We can keep our feet wet, migrating year after year to Swift X version. I would. If it strives to be better. This years, `Swift 2 -> Swift 3` was little more than a mini project. We saw lots of changes but today, `[AnyObject: NSObject]` became `[AnyHashable: Any]`. So does JSON, NSArray and NSDictionary. We will see why `AnyObject -> AnyHashable`?
@@ -43,5 +48,3 @@ Consider the situation - `[NSObject: AnyObject]`. This turned into `[NSObject: A
 - Wait. Why not `[Hashable: Any]`? Good question. Lets see.
 
 ## Why not `[Hashable: Any]`?
-
-
