@@ -25,7 +25,7 @@ But before that, lets dig a little deep to see how and what `AnyHashable` does? 
 *   All Swift types including Enum and Struct can be bridged to Objective-C as `id`. This id is minimal. 
 *   All Swift types that were bridged to Objective-C `id` can be bridged back to `Swift` as `Any` or casted to their previous Type. Swift doesnot remove the type information during the boxing; internally.
 *   For Example: 
-```enum Direction2 : String {
+<pre lang="swift">enum Direction2 : String {
     case down = "UP"
     case up = "DOWN"
 }
@@ -35,7 +35,7 @@ objcArray.add(swiftEnum)
 
 objcArray.lastObject as? Direction2     //down
 objcArray.lastObject as? NSString //nil
-```
+</pre>
 
 # NSObject -> AnyHashable
 
