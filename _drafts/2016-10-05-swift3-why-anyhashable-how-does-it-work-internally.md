@@ -15,19 +15,19 @@ We will dive deep, bear with me.
 # AnyObject -> Any
 
 1.  Swift focuses on using Value Types / immutable type in all cases possible. Foundation in Objective-C, has in other hand, all reference type. Classes. Which will be imported into reference type in swift.
-2.  `AnyObject` is idomatially ObjectiveC flavored and is reference type.
-3.  Swift is platfrom independent, it had to move away from relying on ObjectiveC idioms and its runtime. Hence `AnyObject` had to be replace with Value type and Swift flovored `Any`.
+2.  `AnyObject` is idiomatically ObjectiveC flavored and is reference type.
+3.  Swift is platform independent, it had to move away from relying on ObjectiveC idioms and its runtime. Hence `AnyObject` had to be replace with Value type and Swift flavored `Any`.
 
 ## Some more thoughts
 
-*   `Any` is value type. (We will see how it actually is boxing refernce but is Value type later on)
+*   `Any` is value type. (We will see how it actually is boxing reference but is Value type later on)
 *   All Objective-C Foundation `id` types will be imported as `Any`. 
 *   All Swift types including Enum and Struct can be bridged to Objective-C as `id`. This id is minimal. 
-*   All Swift types that were bridged to Objective-C `id` can be bridged back to `Swift` as `Any` or casted to their previous Type. Swift doesnot remove the type information during the boxing; internally.
+*   All Swift types that were bridged to Objective-C `id` can be bridged back to `Swift` as `Any` or casted to their previous Type. Swift doesn’t remove the type information during the boxing; internally.
 *   For Example: 
-<pre lang="swift">enum Direction2 : String {
-    case down = "UP"
-    case up = "DOWN"
+<pre lang=“swift”>enum Direction2 : String {
+    case down = “UP”
+    case up = “DOWN”
 }
 var objcArray = NSMutableArray() // [NSObject, NSObject] or [id, id]
 var swiftEnum = Direction2.down
@@ -41,7 +41,7 @@ objcArray.lastObject as? NSString //nil
 
 Consider the situation - `[NSObject: AnyObject]`. This turned into `[NSObject: Any]`.
 
-*   Its natural to get rid of `Object` feeling. Afterall, `AnyObject` became `Any`. 
+*   Its natural to get rid of `Object` feeling. After all, `AnyObject` became `Any`. 
 *   Like before, we wanted to work with Value types. NSObject does 2 things which we want to avoid. 
     *   It is a reference type. (There is also NSObjectProtocol)
     *   It requires us to know about ObjectiveC idiom. Swift is again platform independent.
@@ -55,7 +55,7 @@ Consider the situation - `[NSObject: AnyObject]`. This turned into `[NSObject: A
 
 `public static func ==(lhs: Self, rhs: Self) -> Bool`
 
-Hence, `Hashable` can only be used to contraint Generic Types but not be used as a Concrete Type. (For more on this `Generic` issue follow this **link**. ) Thus we need a **concrete type conforming to Hashable** that can fit into the Key of dictionary. We also need to enable heteregeneous collection because it needs to bridge to the Objective-C API NSArray and NSDictionary. Hence, we need a type erased container that confroms to `Hashable` to be used inplace of `NSObject`. That contianer is `AnyHashable`.
+Hence, `Hashable` can only be used to constraint Generic Types but not be used as a Concrete Type. (For more on this `Generic` issue follow this **link**. ) Thus we need a **concrete type conforming to Hashable** that can fit into the Key of dictionary. We also need to enable heterogeneous collection because it needs to bridge to the Objective-C API NSArray and NSDictionary. Hence, we need a type erased container that conforms to `Hashable` to be used in-place of `NSObject`. That container is `AnyHashable`.
 
 # internals of AnyHashable
 If you already know **Boxing** (I mean data boxing. Very essential technique.) and have something else to do, you can stop here. 
@@ -91,7 +91,7 @@ Then a naive way to wrap this or box all Hashable conformed type would be such.
 
 However, for 2 `lookout` the compiler gives us this error and stops from any real success.
 
-    //ERROR: Protocol Hashable can only be used as genric constraint because it has Self or associated type requirements
+    //ERROR: Protocol Hashable can only be used as generic constraint because it has Self or associated type requirements
 
 These should throw back some lightbulbs. Its simple way of saying Hashable is just a Generic Type not a complete one. Because it conforms to Equatable which has Self requirements. [To read more on Generics](http://kandelvijaya.com/index.php/2016/06/24/comparision-of-swift-programming-language-on-the-support-for-generics/)
 
@@ -119,17 +119,17 @@ This will compile fine and work too. However, Swift stdlib has a longer implemen
 
     let iHA = Any2Hashable(12)
     let i2HA = Any2Hashable(UInt8(12))
-    let sHA = Any2Hashable("bj")
+    let sHA = Any2Hashable(“bj”)
     iHA == sHA     // FALSE
     iHA == i2HA    // TRUE :: Lookout
 
-As you can see, although the first comparion looks correct, the second one is somewhat a lie. **Swift is TypeSafe**. "A Int with 12 is not equal with Int8 with 12." The underlying memory representation are different and it should not be equal. Although it seems. With our implementation of Any2Hashable we completely ignored the underlying type for sake of brevity. However, Swift standard library goes in length to fix this subtle fact.
+As you can see, although the first comparison looks correct, the second one is somewhat a lie. **Swift is TypeSafe**. “A Int with 12 is not equal with Int8 with 12.” The underlying memory representation are different and it should not be equal. Although it seems. With our implementation of Any2Hashable we completely ignored the underlying type for sake of brevity. However, Swift standard library goes in length to fix this subtle fact.
 
     let swiftInt64Hashable = Int(12) as AnyHashable
     let swiftInt8Hashable = Int8(12) as AnyHashable
     swiftInt8Hashable == swiftInt64Hashable  // FALSE
 
-We shall see how do they actually preserve type info during the comaprision although AnyHashable, from the outside, is a type erased container for Hashable.
+We shall see how do they actually preserve type info during the comparison although AnyHashable, from the outside, is a type erased container for Hashable.
 
 ### Step 3: Bringing back the Type info
 
@@ -157,12 +157,12 @@ Nothing has changed here except we got rid of other helper methods to be concise
             _baseHashable = base
         }
         
-        //more code....
+        //more code….
     }
 
-Although in the right direction, Compiler wont allow us to use `_InternalConcreteBox` as concrete type for `_box` as this is a Generic Placeholder and incomplete Type (like before). Other than that everything looks good. 
+Although in the right direction, Compiler won’t allow us to use `_InternalConcreteBox` as concrete type for `_box` as this is a Generic Placeholder and incomplete Type (like before). Other than that everything looks good. 
 
-We could say, `_InternalConcreteBoc`_ is bocing a Type but it tries to preserve the original type info. Whereas, `Any2Hashable` is a type erased container. 
+We could say, `_InternalConcreteBoc`_ is boxing a Type but it tries to preserve the original type info. Whereas, `Any2Hashable` is a type erased container. 
 
 ### Step 4: Solving Generics yet again with Protocol
 
@@ -245,10 +245,10 @@ Lets see the tests:
 
 ## Some Key Learnings:
 
-So far, we have seen how to box types. "NOTE: Boxing should be done only when absolutely necessary."
+So far, we have seen how to box types. “NOTE: Boxing should be done only when absolutely necessary.”
 We also saw how we can box types that actually preserves their original type and how it can leverage for cases like AnyHashable.
 
-This is the whole idea how AnyHashable in Swift core library works. There are other pieces of functionality I havent added just to make the topic concise. They can be found [on Swift github repo page](https://github.com/apple/swift/blob/master/stdlib/public/core/AnyHashable.swift). They have rich documentation but requires a lot of researching to get to know the why were they created like the way they are.
+This is the whole idea how AnyHashable in Swift core library works. There are other pieces of functionality I haven’t added just to make the topic concise. They can be found [on Swift github repo page](https://github.com/apple/swift/blob/master/stdlib/public/core/AnyHashable.swift). They have rich documentation but requires a lot of researching to get to know the why were they created like the way they are.
 
 This is how, swift bridges NSArray to [AnyHashable] and NSDictionary to AnyHashable: Any] providing a homogeneous boxed collection to work with.
 
