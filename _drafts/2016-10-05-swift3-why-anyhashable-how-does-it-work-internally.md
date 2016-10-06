@@ -6,7 +6,7 @@ post_date: 2016-10-05 20:07:50
 post_excerpt: ""
 layout: post
 permalink: http://kandelvijaya.com/?p=499
-published: false
+published: true
 ---
 Evolution is predominant. Struggle for Survival applies to just anything that you see. Swift Programming Language is not an exception. Swift continues to change, evolve and mature over time. We can keep our feet wet, migrating year after year to Swift X version. I would. If it strives to be better. This years, `Swift 2 -> Swift 3` was little more than a mini project. We saw lots of changes. For this edition, we will focus on `[AnyObject: NSObject]`, which  became `[AnyHashable: Any]`. So does JSON, NSArray and NSDictionary. But why?
 
