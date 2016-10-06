@@ -8,9 +8,9 @@ layout: post
 permalink: http://kandelvijaya.com/?p=499
 published: false
 ---
-Evolution is predominant. Struggle for Survival applies to just anything that you see. Swift Programming Language is not an exception. Swift continues to change, evolve and mature over time. We can keep our feet wet, migrating year after year to Swift X version. I would. If it strives to be better. This years, `Swift 2 -> Swift 3` was little more than a mini project. We saw lots of changes but today, `[AnyObject: NSObject]` became `[AnyHashable: Any]`. So does JSON, NSArray and NSDictionary. We will see why `AnyObject -> AnyHashable`?
+Evolution is predominant. Struggle for Survival applies to just anything that you see. Swift Programming Language is not an exception. Swift continues to change, evolve and mature over time. We can keep our feet wet, migrating year after year to Swift X version. I would. If it strives to be better. This years, `Swift 2 -> Swift 3` was little more than a mini project. We saw lots of changes. For this edition, we will focus on `[AnyObject: NSObject]`, which  became `[AnyHashable: Any]`. So does JSON, NSArray and NSDictionary. But why?
 
-But before that, lets dig a little deep to see how and what `AnyHashable` does? Better yet, lets simulate a similar `Any2Hashable` together.
+We will dive deep, bear with me. 
 
 # AnyObject -> Any
 
@@ -58,6 +58,12 @@ Consider the situation - `[NSObject: AnyObject]`. This turned into `[NSObject: A
 Hence, `Hashable` can only be used to contraint Generic Types but not be used as a Concrete Type. (For more on this `Generic` issue follow this **link**. ) Thus we need a **concrete type conforming to Hashable** that can fit into the Key of dictionary. We also need to enable heteregeneous collection because it needs to bridge to the Objective-C API NSArray and NSDictionary. Hence, we need a type erased container that confroms to `Hashable` to be used inplace of `NSObject`. That contianer is `AnyHashable`.
 
 # internals of AnyHashable
+If you already know **Boxing** (I mean data boxing. Very essential technique.) and have something else to do, you can stop here. 
+
+Okay, seems like you want to do **Boxing**. Lets dig a little deep to see how and what `AnyHashable` does? Better yet, lets simulate a similar `Any2Hashable` together.
+
+## Boxing
+It is a technique of wrapping a Object inside another container type. It has nothing to do with `Decorator` pattern but you are on track. The best example of this is `Optional<Wrapped>` type. It takes anything and wraps it around with `Optional` enum. This gets rid of lots of assumptions we used to do in `Objective-C`. We will see how `AnyHashable` boxes in the following section. 
 
 ### Step 1: Basic implementation
 Then a naive way to wrap this or box all Hashable conformed type would be such.
@@ -87,7 +93,7 @@ However, for 2 `lookout` the compiler gives us this error and stops from any rea
 
     //ERROR: Protocol Hashable can only be used as genric constraint because it has Self or associated type requirements
 
-These should throw back some lightbulbs. Its simple way of saying Hashable is just a Generic Type not a complete one. Because it conforms to Equatable which has Self requirements.
+These should throw back some lightbulbs. Its simple way of saying Hashable is just a Generic Type not a complete one. Because it conforms to Equatable which has Self requirements. [To read more on Generics](http://kandelvijaya.com/index.php/2016/06/24/comparision-of-swift-programming-language-on-the-support-for-generics/)
 
 ### Step 2: Improvement with Generics
 
@@ -117,7 +123,7 @@ This will compile fine and work too. However, Swift stdlib has a longer implemen
     iHA == sHA     // FALSE
     iHA == i2HA    // TRUE :: Lookout
 
-As you can see, although the first comparion looks correct, the second one is somewhat a lie. **Swift is TypeSafe**. "A Int with 12 is not equal with Int8 with 12." The underlying memory representation are different and it should not be equal although it seems. With our implementation of Any2Hashable we completely ignored the underlying type for sake of brevity. However, Swift standard library goes in length to fix this subtle fact.
+As you can see, although the first comparion looks correct, the second one is somewhat a lie. **Swift is TypeSafe**. "A Int with 12 is not equal with Int8 with 12." The underlying memory representation are different and it should not be equal. Although it seems. With our implementation of Any2Hashable we completely ignored the underlying type for sake of brevity. However, Swift standard library goes in length to fix this subtle fact.
 
     let swiftInt64Hashable = Int(12) as AnyHashable
     let swiftInt8Hashable = Int8(12) as AnyHashable
@@ -127,7 +133,7 @@ We shall see how do they actually preserve type info during the comaprision alth
 
 ### Step 3: Bringing back the Type info
 
-`_box: Any` is limiting us from type checking in our current implementation. What if we wrap the value that is being sent to initializer into a concrete internal struct. We could be on the way to stroing type.
+`_box: Any` is limiting us from type checking in our current implementation. What if we wrap the value that is being sent to initializer into a concrete internal struct. We could be on the way to storing typed type.
 
     struct Any2Hashable{
         //LOOKOUT
@@ -150,22 +156,24 @@ Nothing has changed here except we got rid of other helper methods to be concise
         init(_ base: Base) {
             _baseHashable = base
         }
-
+        
         //more code....
     }
 
 Although in the right direction, Compiler wont allow us to use `_InternalConcreteBox` as concrete type for `_box` as this is a Generic Placeholder and incomplete Type (like before). Other than that everything looks good. 
 
+We could say, `_InternalConcreteBoc`_ is bocing a Type but it tries to preserve the original type info. Whereas, `Any2Hashable` is a type erased container. 
+
 ### Step 4: Solving Generics yet again with Protocol
 
-One way to solve this issue is by providing a complete Protocol Conformance like so:
+One way to solve this issue is by providing a complete Protocol Conformance with the required methods like so:
 
     protocol _Any2HashableBox {
         var _hashValue: Int { get }
         func _isEqual(to: _Any2HashableBox) -> Bool?
     }
 
-and the Internal Box looks like so.
+and the Internal Box looks like so. Then we can use `_Any2HashableBox` as complete type.
 
 `struct _InternalConcreteBox<Base: Hashable>: _Any2HashableBox { ….`
 
@@ -240,7 +248,7 @@ Lets see the tests:
 So far, we have seen how to box types. "NOTE: Boxing should be done only when absolutely necessary."
 We also saw how we can box types that actually preserves their original type and how it can leverage for cases like AnyHashable.
 
-This is the whole idea how AnyHashable in Swift core library works. There are other pieces of functionality I havent added just to make the topic concise. They can be found on Swift github repo. They have rich documentation but requires a lot of researching to get to know the why were they created like the way they are.
+This is the whole idea how AnyHashable in Swift core library works. There are other pieces of functionality I havent added just to make the topic concise. They can be found [on Swift github repo page](https://github.com/apple/swift/blob/master/stdlib/public/core/AnyHashable.swift). They have rich documentation but requires a lot of researching to get to know the why were they created like the way they are.
 
 This is how, swift bridges NSArray to [AnyHashable] and NSDictionary to AnyHashable: Any] providing a homogeneous boxed collection to work with.
 
