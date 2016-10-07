@@ -14,16 +14,16 @@ We will dive deep, bear with me.
 
 # AnyObject -> Any
 
-1.  Swift focuses on using Value Types / immutable type in all cases possible. Foundation in Objective-C, has in other hand, all reference type. Classes. Which will be imported into reference type in swift.
+1.  Swift focuses on using Value Types / immutable type in all cases possible. Foundation in Objective-C, has in other hand, mostly reference type. Classes. Which will be imported into reference type in swift.
 2.  `AnyObject` is idiomatically ObjectiveC flavored and is reference type.
-3.  Swift is platform independent, it had to move away from relying on ObjectiveC idioms and its runtime. Hence `AnyObject` had to be replace with Value type and Swift flavored `Any`.
+3.  Swift is platform independent, it had to move away from relying on ObjectiveC idioms and its runtime. Hence `AnyObject` had to be replace with Value type. Swift choosed `Any`.
 
 ## Some more thoughts
 
-*   `Any` is value type. (We will see how it actually is boxing reference but is Value type later on)
+*   `Any` is value type. (Although it can box a reference type)
 *   All Objective-C Foundation `id` types will be imported as `Any`. 
-*   All Swift types including Enum and Struct can be bridged to Objective-C as `id`. This id is minimal. 
-*   All Swift types that were bridged to Objective-C `id` can be bridged back to `Swift` as `Any` or casted to their previous Type. Swift doesn’t remove the type information during the boxing; internally.
+*   All Swift types including Enum and Struct can be bridged to Objective-C as `id`. Although, such `id` can not do much. 
+*   All Swift types that were bridged to Objective-C `id` can be bridged back to `Swift` as `Any` or casted to their previous Type. Swift doesn’t remove the type information during the boxing; at least internally.
 *   For Example: 
 <pre lang=“swift”>enum Direction2 : String {
     case down = “UP”
@@ -55,7 +55,7 @@ Consider the situation - `[NSObject: AnyObject]`. This turned into `[NSObject: A
 
 `public static func ==(lhs: Self, rhs: Self) -> Bool`
 
-Hence, `Hashable` can only be used to constraint Generic Types but not be used as a Concrete Type. (For more on this `Generic` issue follow this **link**. ) Thus we need a **concrete type conforming to Hashable** that can fit into the Key of dictionary. We also need to enable heterogeneous collection because it needs to bridge to the Objective-C API NSArray and NSDictionary. Hence, we need a type erased container that conforms to `Hashable` to be used in-place of `NSObject`. That container is `AnyHashable`.
+Hence, `Hashable` can only be used to constraint Generic Types but not be used as a Concrete Type. (For more on this `Generic` issue follow this [link](http://kandelvijaya.com/index.php/2016/06/24/comparision-of-swift-programming-language-on-the-support-for-generics/). ) Thus we need a **concrete type conforming to Hashable** that can fit into the Key of dictionary. We also need to enable heterogeneous collection because it needs to bridge to the Objective-C API NSArray and NSDictionary. Hence, we need a type erased container that conforms to `Hashable` to be used in-place of `NSObject`. That container is `AnyHashable`.
 
 # internals of AnyHashable
 If you already know **Boxing** (I mean data boxing. Very essential technique.) and have something else to do, you can stop here. 
@@ -253,3 +253,4 @@ This is the whole idea how AnyHashable in Swift core library works. There are ot
 This is how, swift bridges NSArray to [AnyHashable] and NSDictionary to AnyHashable: Any] providing a homogeneous boxed collection to work with.
 
 ### Cheers! Feel free to edit this post, if needed.
+To edit [this post](https://github.com/kandelvijaya/kandelvijayacom/blob/master/_posts/2016-10-06-swift3-why-anyhashable-how-does-it-work-internally.md), simply create a Pull Request on [Github](https://github.com/kandelvijaya/kandelvijayacom/blob/master/_posts/2016-10-06-swift3-why-anyhashable-how-does-it-work-internally.md). 
